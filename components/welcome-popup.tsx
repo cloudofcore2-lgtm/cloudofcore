@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, onSnapshot } from "firebase/firestore"; // onSnapshot import করুন
 import { db } from "@/lib/firebase";
 
 interface WelcomePopupProps {
@@ -26,12 +26,14 @@ export function WelcomePopup({ isOpen, onClose }: WelcomePopupProps) {
   const [displayedText, setDisplayedText] = useState("");
   const [isTyping, setIsTyping] = useState(true);
 
-  // Fetch popup config from Firebase
+  // Real-time listener for welcome popup config - MODIFIED
   useEffect(() => {
-    const fetchConfig = async () => {
-      try {
-        const docRef = doc(db, "welcomePopup", "config");
-        const docSnap = await getDoc(docRef);
+    if (!isOpen) return;
+
+    // onSnapshot ব্যবহার করে রিয়েলটাইম আপডেট শুনুন
+    const unsubscribe = onSnapshot(
+      doc(db, "welcomePopup", "config"),
+      (docSnap) => {
         if (docSnap.exists()) {
           const data = docSnap.data();
           setConfig({
@@ -39,15 +41,17 @@ export function WelcomePopup({ isOpen, onClose }: WelcomePopupProps) {
             title: data.title || config.title,
             message: data.message || config.message,
           });
+          console.log("Welcome popup updated in realtime!");
         }
-      } catch (error) {
-        console.log("[v0] Using default welcome popup config");
+      },
+      (error) => {
+        console.log("Using default welcome popup config:", error);
       }
-    };
-    if (isOpen) {
-      fetchConfig();
-    }
-  }, [isOpen]);
+    );
+
+    // Cleanup: popup বন্ধ হলে লিসেনার বন্ধ করুন
+    return () => unsubscribe();
+  }, [isOpen]); // config.imageUrl dependency বাদ দিন
 
   // Typing animation effect
   useEffect(() => {
@@ -102,6 +106,10 @@ export function WelcomePopup({ isOpen, onClose }: WelcomePopupProps) {
               src={config.imageUrl}
               alt="Welcome"
               className="mx-auto mb-5 max-h-[260px] w-full rounded-[32px] border-2 border-orange-400 object-contain shadow-[0_10px_30px_rgba(0,0,0,0.5)]"
+              onError={(e) => {
+                // ইমেজ লোড না হলে ডিফল্ট ইমেজ দেখান
+                (e.target as HTMLImageElement).src = "https://i.postimg.cc/kX3Xh6PG/IMG-20260211-135705-716-removebg-preview.png";
+              }}
             />
 
             <h2 className="mb-4 bg-gradient-to-r from-orange-300 to-orange-500 bg-clip-text text-2xl font-extrabold tracking-tight text-transparent">
