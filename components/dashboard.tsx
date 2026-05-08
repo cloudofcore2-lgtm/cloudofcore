@@ -86,8 +86,8 @@ const BATCH_STUDENTS: Record<string, string[]> = {
     "abu talha shamim",
     "kamrul hassan sojib",
     "md jafor ahmed",
+    "md piyash",
     "mosharof khan",
-    "arfat hossain",
   ],
 };
 
