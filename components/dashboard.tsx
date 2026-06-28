@@ -85,7 +85,7 @@ const BATCH_STUDENTS: Record<string, string[]> = {
     "abu talha shamim",
     "kamrul hassan sojib",
   ],
-  "306": Array.from({ length: 1000 }, (_, i) => `Student ${i + 1}`),
+  "306": Array.from({ length: 15 }, (_, i) => `Student ${i + 1}`),
 };
 
 const getRankBadge = (rank: number) => {
@@ -509,7 +509,7 @@ export function Dashboard() {
           >
             <span className="flex items-center gap-1">
               <span className="inline-block h-2 w-2 animate-pulse rounded-full bg-green-500" />
-              US Server
+              korean Server
             </span>
             <span className="text-gray-600">|</span>
             <span>Country: Bangladesh</span>
