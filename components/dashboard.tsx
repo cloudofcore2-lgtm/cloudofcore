@@ -421,9 +421,8 @@ export function Dashboard() {
       .sort((a, b) => (b.data.totalPoints || 0) - (a.data.totalPoints || 0));
   };
 
-  // Default data for display when no Firebase data
+  // Default data for display when no Firebase data - 301 removed
   const defaultBatchStats: BatchStat[] = [
-    { batch: "301", value: "12.4K", trend: "up" },
     { batch: "302", value: "9.8K", trend: "down" },
     { batch: "303", value: "15.6K", trend: "up" },
     { batch: "304", value: "7.5K", trend: "down" },
@@ -531,7 +530,7 @@ export function Dashboard() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="mb-6 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-5"
+          className="mb-6 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4"
         >
           {displayBatchStats.map((stat, idx) => (
             <div
@@ -706,7 +705,7 @@ export function Dashboard() {
           </div>
         </motion.section>
 
-        {/* Batch Buttons */}
+        {/* Batch Buttons - 301 removed */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
