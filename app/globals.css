@@ -4,41 +4,41 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.145 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.145 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.985 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.396 0.141 25.723);
+  --destructive-foreground: oklch(0.637 0.237 25.331);
+  --border: oklch(0.269 0 0);
+  --input: oklch(0.269 0 0);
+  --ring: oklch(0.439 0 0);
+  --chart-1: oklch(0.488 0.243 264.376);
+  --chart-2: oklch(0.696 0.17 162.48);
+  --chart-3: oklch(0.769 0.188 70.08);
+  --chart-4: oklch(0.627 0.265 303.9);
+  --chart-5: oklch(0.645 0.246 16.439);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
   --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(0.269 0 0);
+  --sidebar-ring: oklch(0.439 0 0);
 }
 
+/* Dark theme is default now */
 .dark {
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
@@ -124,41 +124,177 @@
   }
 }
 
-/* Custom scrollbar */
+/* Custom scrollbar - Deep Green Theme */
 ::-webkit-scrollbar {
   width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(20, 15, 10, 0.5);
+  background: rgba(0, 30, 20, 0.5);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 102, 0, 0.5);
+  background: rgba(0, 200, 150, 0.5);
   border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 102, 0, 0.8);
+  background: rgba(0, 230, 180, 0.8);
 }
 
-/* Animations */
-@keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 20px rgba(255, 102, 0, 0.5); }
-  50% { box-shadow: 0 0 40px rgba(255, 102, 0, 0.8); }
+/* ============================================ */
+/* DEEP GREEN GRADIENT LIQUID WATER EFFECTS     */
+/* ============================================ */
+
+/* Main Liquid Water Background Animation */
+@keyframes liquidWater {
+  0% {
+    background-position: 0% 50%;
+  }
+  25% {
+    background-position: 25% 75%;
+  }
+  50% {
+    background-position: 50% 50%;
+  }
+  75% {
+    background-position: 75% 25%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
+@keyframes liquidWaterFloat {
+  0%, 100% {
+    transform: translateY(0px) scale(1);
+  }
+  33% {
+    transform: translateY(-5px) scale(1.02);
+  }
+  66% {
+    transform: translateY(5px) scale(0.98);
+  }
+}
+
+/* Deep Green Liquid Gradient */
+.liquid-green-gradient {
+  background: linear-gradient(
+    -45deg,
+    #0a1f1a,
+    #0d2f26,
+    #0a3d30,
+    #0d2f26,
+    #0a1f1a
+  );
+  background-size: 400% 400%;
+  animation: liquidWater 15s ease-in-out infinite;
+}
+
+/* Green Accent Glow */
+.green-glow {
+  box-shadow: 0 0 30px rgba(0, 200, 150, 0.3);
+  border-color: rgba(0, 200, 150, 0.3);
+}
+
+.green-glow-strong {
+  box-shadow: 0 0 50px rgba(0, 220, 170, 0.4);
+  border-color: rgba(0, 220, 170, 0.5);
+}
+
+/* Gradient Text - Green */
+.gradient-text-green {
+  background: linear-gradient(135deg, #00d4a0, #00a87a, #00d4a0);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: liquidWater 4s ease-in-out infinite;
+}
+
+/* Liquid Border Effect */
+.liquid-border {
+  position: relative;
+  border: 1px solid transparent;
+  background-clip: padding-box;
+}
+
+.liquid-border::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  padding: 2px;
+  background: linear-gradient(
+    45deg,
+    #00d4a0,
+    #00a87a,
+    #00d4a0,
+    #008060,
+    #00d4a0
+  );
+  background-size: 400% 400%;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: liquidWater 6s ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* Pulse Animation - Green */
+@keyframes pulse-glow-green {
+  0%, 100% { 
+    box-shadow: 0 0 20px rgba(0, 200, 150, 0.3); 
+  }
+  50% { 
+    box-shadow: 0 0 60px rgba(0, 220, 170, 0.6); 
+  }
 }
 
 .animate-pulse-glow {
-  animation: pulse-glow 2s infinite;
+  animation: pulse-glow-green 2s infinite;
+}
+
+/* Float Animation - Green */
+@keyframes float-green {
+  0%, 100% { 
+    transform: translateY(0px);
+    filter: drop-shadow(0 0 20px rgba(0, 200, 150, 0.3));
+  }
+  50% { 
+    transform: translateY(-10px);
+    filter: drop-shadow(0 0 40px rgba(0, 220, 170, 0.5));
+  }
 }
 
 .animate-float {
-  animation: float 3s ease-in-out infinite;
+  animation: float-green 3s ease-in-out infinite;
+}
+
+/* Water Ripple Effect */
+@keyframes ripple {
+  0% {
+    transform: scale(0.8);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+.ripple-effect {
+  position: relative;
+  overflow: hidden;
+}
+
+.ripple-effect::after {
+  content: '';
+  position: absolute;
+  inset: -50%;
+  background: radial-gradient(circle at center, rgba(0, 200, 150, 0.1) 0%, transparent 70%);
+  animation: ripple 4s ease-out infinite;
+  pointer-events: none;
 }
 
 /* Smooth scrolling */
@@ -203,7 +339,7 @@ button, a {
   }
 }
 
-/* Loading spinner animation */
+/* Loading spinner animation - Green */
 @keyframes spin-smooth {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
@@ -243,4 +379,70 @@ button, a {
 
 .animate-scale-in {
   animation: scale-in 0.3s ease-out forwards;
+}
+
+/* ============================================ */
+/* LIQUID WATER WAVE ANIMATION FOR BACKGROUND   */
+/* ============================================ */
+
+@keyframes wave {
+  0% {
+    transform: translateX(0) translateZ(0) scaleY(1);
+  }
+  50% {
+    transform: translateX(-25%) translateZ(0) scaleY(0.8);
+  }
+  100% {
+    transform: translateX(-50%) translateZ(0) scaleY(1);
+  }
+}
+
+.wave-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.wave-container::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: 
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 50px,
+      rgba(0, 200, 150, 0.03) 50px,
+      rgba(0, 200, 150, 0.03) 100px
+    );
+  background-size: 200px 100%;
+  animation: wave 8s linear infinite;
+  pointer-events: none;
+}
+
+/* Green Water Drop Effect */
+@keyframes drop {
+  0% {
+    transform: scale(0);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+
+.water-drop {
+  position: relative;
+}
+
+.water-drop::after {
+  content: '💧';
+  position: absolute;
+  font-size: 20px;
+  animation: drop 3s ease-in-out infinite;
+  pointer-events: none;
 }
