@@ -8,15 +8,21 @@ import { PlexusCanvas } from "./plexus-canvas";
 import { AuthModal } from "./auth-modal";
 import { Dashboard } from "./dashboard";
 import { Server3D } from "./server-3d";
+import { SplashScreen } from "./splash-screen";
 
 export function LandingPage() {
   const [user, setUser] = useState<User | null>(null);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [showSplash, setShowSplash] = useState(false);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
+      if (currentUser) {
+        // Show splash screen when user logs in or auto-logs in
+        setShowSplash(true);
+      }
       setIsLoading(false);
     });
     return () => unsubscribe();
@@ -37,6 +43,7 @@ export function LandingPage() {
   if (user) {
     return (
       <>
+        {showSplash && <SplashScreen onComplete={() => setShowSplash(false)} />}
         <PlexusCanvas />
         <div className="fixed inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(255,100,0,0.08)_0%,#0a0a0a_90%)] pointer-events-none z-[1]" />
         <Dashboard />
