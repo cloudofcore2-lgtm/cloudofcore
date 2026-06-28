@@ -76,7 +76,6 @@ interface StudentData {
 }
 
 const BATCH_STUDENTS: Record<string, string[]> = {
-  "301": Array.from({ length: 888 }, (_, i) => `Student ${i + 1}`),
   "302": Array.from({ length: 292 }, (_, i) => `Learner ${i + 1}`),
   "303": Array.from({ length: 278 }, (_, i) => `Scholar ${i + 1}`),
   "304": Array.from({ length: 318 }, (_, i) => `Pioneer ${i + 1}`),
@@ -85,10 +84,8 @@ const BATCH_STUDENTS: Record<string, string[]> = {
     "sayid hossain sayem",
     "abu talha shamim",
     "kamrul hassan sojib",
-    "md jafor ahmed",
-    "md piyash",
-    "mosharof khan",
   ],
+  "306": Array.from({ length: 1000 }, (_, i) => `Student ${i + 1}`),
 };
 
 const getRankBadge = (rank: number) => {
@@ -426,11 +423,11 @@ export function Dashboard() {
 
   // Default data for display when no Firebase data
   const defaultBatchStats: BatchStat[] = [
-    { batch: "301", value: "12.4K", trend: "up" },
     { batch: "302", value: "9.8K", trend: "down" },
     { batch: "303", value: "15.6K", trend: "up" },
     { batch: "304", value: "7.5K", trend: "down" },
     { batch: "305", value: "21.0K", trend: "up" },
+    { batch: "306", value: "12.4K", trend: "up" },
   ];
 
   const defaultRanking: RankingItem[] = Array.from({ length: 10 }, (_, i) => ({
