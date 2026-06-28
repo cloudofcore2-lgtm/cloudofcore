@@ -423,6 +423,7 @@ export function Dashboard() {
 
   // Default data for display when no Firebase data
   const defaultBatchStats: BatchStat[] = [
+    { batch: "301", value: "12.4K", trend: "up" },
     { batch: "302", value: "9.8K", trend: "down" },
     { batch: "303", value: "15.6K", trend: "up" },
     { batch: "304", value: "7.5K", trend: "down" },
