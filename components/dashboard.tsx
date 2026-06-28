@@ -91,15 +91,15 @@ const BATCH_STUDENTS: Record<string, string[]> = {
 const getRankBadge = (rank: number) => {
   switch (rank) {
     case 1:
-      return <Gem className="h-5 w-5 text-emerald-300" />;
+      return <Gem className="h-5 w-5 text-cyan-300" />;
     case 2:
       return <Crown className="h-5 w-5 text-yellow-400" />;
     case 3:
       return <Medal className="h-5 w-5 text-gray-400" />;
     case 4:
-      return <Award className="h-5 w-5 text-emerald-700" />;
+      return <Award className="h-5 w-5 text-orange-700" />;
     default:
-      return <Star className="h-5 w-5 text-emerald-400" />;
+      return <Star className="h-5 w-5 text-orange-400" />;
   }
 };
 
@@ -110,9 +110,9 @@ const getMissionBadge = (rank: number) => {
     case 2:
       return <Medal className="h-5 w-5 text-gray-400" />;
     case 3:
-      return <Award className="h-5 w-5 text-emerald-700" />;
+      return <Award className="h-5 w-5 text-orange-700" />;
     default:
-      return <ChevronUp className="h-5 w-5 text-emerald-400" />;
+      return <ChevronUp className="h-5 w-5 text-orange-400" />;
   }
 };
 
@@ -140,6 +140,7 @@ export function Dashboard() {
   const [todayClass, setTodayClass] = useState("No Class");
   const [todayUpdate, setTodayUpdate] = useState("Welcome to Cloud of Core! Stay tuned for daily updates.");
 
+  // Auth state listener
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
@@ -153,11 +154,13 @@ export function Dashboard() {
     return () => unsubscribe();
   }, [welcomeShown]);
 
+  // Real-time data listeners with error handling
   useEffect(() => {
     if (!user) return;
 
     const unsubscribers: (() => void)[] = [];
 
+    // Total students
     const fetchSettings = async () => {
       try {
         const docRef = doc(db, "settings", "general");
@@ -171,7 +174,7 @@ export function Dashboard() {
     };
     fetchSettings();
 
-    // Batch stats with 301 filter
+    // Batch stats with 301 filter - FIXED
     try {
       const unsubBatchStats = onSnapshot(
         collection(db, "batchStats"),
@@ -179,6 +182,7 @@ export function Dashboard() {
           const stats: BatchStat[] = [];
           snapshot.forEach((docItem) => {
             const data = docItem.data();
+            // 301 বাদ দিতে এই কন্ডিশন
             if (data.batch !== "301") {
               stats.push({
                 batch: data.batch,
@@ -191,11 +195,16 @@ export function Dashboard() {
             setBatchStats(stats.sort((a, b) => parseInt(a.batch) - parseInt(b.batch)));
           }
         },
-        () => {}
+        () => {
+          // Silent fail - use default data
+        }
       );
       unsubscribers.push(unsubBatchStats);
-    } catch {}
+    } catch {
+      // Firebase not configured properly
+    }
 
+    // Leadership board with error handling
     try {
       const leadershipQuery = query(collection(db, "batchLeadership"), orderBy("rank"));
       const unsubLeadership = onSnapshot(
@@ -214,11 +223,16 @@ export function Dashboard() {
             setLeadership(items);
           }
         },
-        () => {}
+        () => {
+          // Silent fail - use default data
+        }
       );
       unsubscribers.push(unsubLeadership);
-    } catch {}
+    } catch {
+      // Firebase not configured properly
+    }
 
+    // Mission rank with error handling
     try {
       const missionQuery = query(collection(db, "missionRank"), orderBy("rank"));
       const unsubMission = onSnapshot(
@@ -240,11 +254,16 @@ export function Dashboard() {
             setMissionRank(items);
           }
         },
-        () => {}
+        () => {
+          // Silent fail - use default data
+        }
       );
       unsubscribers.push(unsubMission);
-    } catch {}
+    } catch {
+      // Firebase not configured properly
+    }
 
+    // Ranking with error handling
     try {
       const rankingQuery = query(collection(db, "ranking"), orderBy("points", "desc"));
       const unsubRanking = onSnapshot(
@@ -262,11 +281,16 @@ export function Dashboard() {
             setRanking(items.slice(0, 10));
           }
         },
-        () => {}
+        () => {
+          // Silent fail - use default data
+        }
       );
       unsubscribers.push(unsubRanking);
-    } catch {}
+    } catch {
+      // Firebase not configured properly
+    }
 
+    // Notice with error handling
     try {
       const unsubNotice = onSnapshot(
         doc(db, "notices", "latest"),
@@ -275,11 +299,16 @@ export function Dashboard() {
             setNotice(docSnap.data().content || "");
           }
         },
-        () => {}
+        () => {
+          // Silent fail - use default notice
+        }
       );
       unsubscribers.push(unsubNotice);
-    } catch {}
+    } catch {
+      // Firebase not configured properly
+    }
 
+    // Students data with error handling
     try {
       const unsubStudents = onSnapshot(
         collection(db, "students"),
@@ -290,11 +319,16 @@ export function Dashboard() {
           });
           setStudentsData(data);
         },
-        () => {}
+        () => {
+          // Silent fail - use default data
+        }
       );
       unsubscribers.push(unsubStudents);
-    } catch {}
+    } catch {
+      // Firebase not configured properly
+    }
 
+    // Today Class with error handling
     try {
       const unsubTodayClass = onSnapshot(
         doc(db, "settings", "todayClass"),
@@ -303,11 +337,16 @@ export function Dashboard() {
             setTodayClass(docSnap.data().content || "No Class");
           }
         },
-        () => {}
+        () => {
+          // Silent fail - use default
+        }
       );
       unsubscribers.push(unsubTodayClass);
-    } catch {}
+    } catch {
+      // Firebase not configured properly
+    }
 
+    // Today Update with error handling
     try {
       const unsubTodayUpdate = onSnapshot(
         doc(db, "settings", "todayUpdate"),
@@ -316,10 +355,14 @@ export function Dashboard() {
             setTodayUpdate(docSnap.data().content || "Welcome to Cloud of Core! Stay tuned for daily updates.");
           }
         },
-        () => {}
+        () => {
+          // Silent fail - use default
+        }
       );
       unsubscribers.push(unsubTodayUpdate);
-    } catch {}
+    } catch {
+      // Firebase not configured properly
+    }
 
     return () => {
       unsubscribers.forEach((unsub) => unsub());
@@ -381,6 +424,7 @@ export function Dashboard() {
       .sort((a, b) => (b.data.totalPoints || 0) - (a.data.totalPoints || 0));
   };
 
+  // Default data for display when no Firebase data - 301 removed
   const defaultBatchStats: BatchStat[] = [
     { batch: "302", value: "9.8K", trend: "down" },
     { batch: "303", value: "15.6K", trend: "up" },
@@ -402,21 +446,21 @@ export function Dashboard() {
   return (
     <div className="relative z-10 flex min-h-screen flex-col">
       {/* Header */}
-      <header className="sticky top-0 z-50 flex items-center gap-3 border-b-2 border-emerald-500/50 bg-[#0a1a15]/85 px-5 py-3 backdrop-blur-xl">
+      <header className="sticky top-0 z-50 flex items-center gap-3 border-b-2 border-orange-500/50 bg-[#140f0a]/85 px-5 py-3 backdrop-blur-xl">
         <img
           src="https://i.postimg.cc/kX3Xh6PG/IMG-20260211-135705-716-removebg-preview.png"
           alt="Logo"
-          className="h-10 drop-shadow-[0_0_15px_#00d4a0]"
+          className="h-10 drop-shadow-[0_0_15px_#ff6600]"
         />
 
         <div className="relative flex-1">
-          <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-emerald-500/50" />
+          <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-orange-500/50" />
           <input
             type="text"
             placeholder="Search students..."
             value={searchQuery}
             onChange={(e) => handleSearch(e.target.value)}
-            className="w-full rounded-[40px] border border-emerald-500/50 bg-[#0d2f26]/70 py-3 pl-11 pr-4 text-sm text-white placeholder:text-gray-500 focus:border-emerald-500 focus:outline-none"
+            className="w-full rounded-[40px] border border-orange-500/50 bg-[#1e1914]/70 py-3 pl-11 pr-4 text-sm text-white placeholder:text-gray-500 focus:border-orange-500 focus:outline-none"
           />
 
           <AnimatePresence>
@@ -425,13 +469,13 @@ export function Dashboard() {
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
-                className="absolute left-0 right-0 top-full z-50 mt-2 max-h-[200px] overflow-y-auto rounded-xl border border-emerald-500 bg-[#0d2f26]"
+                className="absolute left-0 right-0 top-full z-50 mt-2 max-h-[200px] overflow-y-auto rounded-xl border border-orange-500 bg-[#2a1f15]"
               >
                 {searchResults.map((result, idx) => (
                   <div
                     key={idx}
                     onClick={() => handleStudentClick(result.batch, result.name)}
-                    className="cursor-pointer border-b border-emerald-400/30 px-4 py-3 text-emerald-400 transition-colors hover:bg-emerald-500/20"
+                    className="cursor-pointer border-b border-orange-400/30 px-4 py-3 text-orange-400 transition-colors hover:bg-orange-500/20"
                   >
                     {result.name} · Batch {result.batch}
                   </div>
@@ -443,7 +487,7 @@ export function Dashboard() {
 
         <button
           onClick={handleLogout}
-          className="flex items-center gap-2 rounded-[30px] border-2 border-emerald-500 bg-transparent px-5 py-2.5 text-sm font-semibold text-emerald-500 transition-all hover:bg-emerald-500 hover:text-black"
+          className="flex items-center gap-2 rounded-[30px] border-2 border-orange-500 bg-transparent px-5 py-2.5 text-sm font-semibold text-orange-500 transition-all hover:bg-orange-500 hover:text-black"
         >
           <LogOut className="h-4 w-4" />
           EXIT
@@ -457,8 +501,9 @@ export function Dashboard() {
           <img
             src="https://i.postimg.cc/kX3Xh6PG/IMG-20260211-135705-716-removebg-preview.png"
             alt="Logo"
-            className="mx-auto w-[min(200px,45%)] drop-shadow-[0_0_30px_#00d4a0]"
+            className="mx-auto w-[min(200px,45%)] drop-shadow-[0_0_30px_#ff6600]"
           />
+          {/* Server Watermark */}
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
@@ -466,7 +511,7 @@ export function Dashboard() {
             className="mt-2 flex items-center justify-center gap-2 text-xs text-gray-400"
           >
             <span className="flex items-center gap-1">
-              <span className="inline-block h-2 w-2 animate-pulse rounded-full bg-emerald-500" />
+              <span className="inline-block h-2 w-2 animate-pulse rounded-full bg-green-500" />
               korean Server
             </span>
             <span className="text-gray-600">|</span>
@@ -478,12 +523,12 @@ export function Dashboard() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mb-6 text-center text-2xl font-bold text-emerald-400 drop-shadow-[0_0_20px_rgba(0,212,160,0.5)]"
+          className="mb-6 text-center text-2xl font-bold text-orange-400 drop-shadow-[0_0_20px_rgba(255,102,0,0.5)]"
         >
           {totalStudents}
         </motion.div>
 
-        {/* Batch Stats */}
+        {/* Batch Stats - 301 removed */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -493,20 +538,20 @@ export function Dashboard() {
           {displayBatchStats.map((stat, idx) => (
             <div
               key={idx}
-              className="rounded-[20px] border border-emerald-500/50 bg-gradient-to-br from-[#0d2f26]/80 to-[#0a1a15]/90 p-4 text-center backdrop-blur-sm"
+              className="rounded-[20px] border border-orange-500/50 bg-gradient-to-br from-[#281e14]/80 to-[#140f0a]/90 p-4 text-center backdrop-blur-sm"
             >
-              <div className="mb-1 text-sm font-bold text-emerald-400">
+              <div className="mb-1 text-sm font-bold text-orange-400">
                 BATCH {stat.batch}
               </div>
               <div className="flex items-center justify-center gap-1 text-2xl font-extrabold text-white">
                 {stat.value}
                 {stat.trend === "up" ? (
-                  <TrendingUp className="h-5 w-5 text-emerald-300" />
+                  <TrendingUp className="h-5 w-5 text-orange-300" />
                 ) : (
-                  <TrendingDown className="h-5 w-5 text-emerald-600" />
+                  <TrendingDown className="h-5 w-5 text-orange-600" />
                 )}
               </div>
-              <div className="mt-2 text-xs font-semibold uppercase text-emerald-400">
+              <div className="mt-2 text-xs font-semibold uppercase text-orange-400">
                 TOTAL POINTS
               </div>
             </div>
@@ -521,34 +566,38 @@ export function Dashboard() {
           className="mb-8"
         >
           <div className="mb-4 text-center">
-            <h3 className="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-400 to-emerald-300 bg-clip-text text-2xl font-extrabold text-transparent">
-              <Tv className="h-6 w-6 text-emerald-400" />
+            <h3 className="inline-flex items-center gap-2 bg-gradient-to-r from-orange-400 to-orange-300 bg-clip-text text-2xl font-extrabold text-transparent">
+              <Tv className="h-6 w-6 text-orange-400" />
               TODAY CLASS
             </h3>
           </div>
 
-          <div className="relative mx-auto max-w-md overflow-hidden rounded-[30px] border-2 border-emerald-500/50 bg-gradient-to-br from-[#0d2f26]/90 to-[#050d0a]/95 p-6 backdrop-blur-lg">
-            <div className="pointer-events-none absolute inset-y-0 left-0 w-16 bg-gradient-to-r from-emerald-500/30 to-transparent" />
-            <div className="pointer-events-none absolute inset-y-0 right-0 w-16 bg-gradient-to-l from-emerald-500/30 to-transparent" />
+          <div className="relative mx-auto max-w-md overflow-hidden rounded-[30px] border-2 border-orange-500/50 bg-gradient-to-br from-[#281e14]/90 to-[#0a0805]/95 p-6 backdrop-blur-lg">
+            {/* Watch-like gradient sides */}
+            <div className="pointer-events-none absolute inset-y-0 left-0 w-16 bg-gradient-to-r from-orange-500/30 to-transparent" />
+            <div className="pointer-events-none absolute inset-y-0 right-0 w-16 bg-gradient-to-l from-orange-500/30 to-transparent" />
             
+            {/* Center content */}
             <div className="relative flex flex-col items-center justify-center py-4">
+              {/* Clock icon with pulse animation */}
               <motion.div
                 animate={{ scale: [1, 1.1, 1] }}
                 transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
                 className="mb-4"
               >
-                <div className="flex h-16 w-16 items-center justify-center rounded-full border-2 border-emerald-500/50 bg-emerald-500/10 shadow-[0_0_30px_rgba(0,212,160,0.3)]">
-                  <Clock className="h-8 w-8 text-emerald-400" />
+                <div className="flex h-16 w-16 items-center justify-center rounded-full border-2 border-orange-500/50 bg-orange-500/10 shadow-[0_0_30px_rgba(255,102,0,0.3)]">
+                  <Clock className="h-8 w-8 text-orange-400" />
                 </div>
               </motion.div>
 
+              {/* Class info */}
               <motion.div
                 key={todayClass}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 className="text-center"
               >
-                <p className="text-2xl font-bold text-white drop-shadow-[0_0_10px_rgba(0,212,160,0.5)]">
+                <p className="text-2xl font-bold text-white drop-shadow-[0_0_10px_rgba(255,102,0,0.5)]">
                   {todayClass}
                 </p>
                 <p className="mt-2 text-xs text-gray-400">
@@ -556,13 +605,14 @@ export function Dashboard() {
                 </p>
               </motion.div>
 
+              {/* Decorative dots */}
               <div className="mt-4 flex gap-2">
                 {[...Array(3)].map((_, i) => (
                   <motion.div
                     key={i}
                     animate={{ opacity: [0.3, 1, 0.3] }}
                     transition={{ duration: 1.5, repeat: Infinity, delay: i * 0.3 }}
-                    className="h-2 w-2 rounded-full bg-emerald-500"
+                    className="h-2 w-2 rounded-full bg-orange-500"
                   />
                 ))}
               </div>
@@ -578,7 +628,7 @@ export function Dashboard() {
           className="mb-8"
         >
           <div className="mb-4 text-center">
-            <h3 className="inline-block bg-gradient-to-r from-emerald-400 to-emerald-300 bg-clip-text text-2xl font-extrabold text-transparent">
+            <h3 className="inline-block bg-gradient-to-r from-orange-400 to-orange-300 bg-clip-text text-2xl font-extrabold text-transparent">
               <Gem className="mr-2 inline h-6 w-6 text-cyan-400" />
               BEST PERFORMANCE BATCH
             </h3>
@@ -591,16 +641,16 @@ export function Dashboard() {
                 key={idx}
                 className={`flex items-center gap-3 rounded-[40px] border px-4 py-3 backdrop-blur-sm ${
                   item.batch === "305"
-                    ? "border-2 border-emerald-400 bg-gradient-to-r from-emerald-500/30 to-emerald-600/20 shadow-[0_0_20px_rgba(0,212,160,0.3)]"
-                    : "border-emerald-500/30 bg-gradient-to-r from-[#0d2f26]/80 to-[#0a1a15]/80"
+                    ? "border-2 border-orange-400 bg-gradient-to-r from-orange-500/30 to-orange-600/20 shadow-[0_0_20px_rgba(255,102,0,0.3)]"
+                    : "border-orange-500/30 bg-gradient-to-r from-[#281e14]/80 to-[#140f0a]/80"
                 }`}
               >
-                <span className="w-9 text-lg font-extrabold text-emerald-400">
+                <span className="w-9 text-lg font-extrabold text-orange-400">
                   #{item.rank}
                 </span>
                 <div className="w-11 animate-pulse">{getRankBadge(item.rank)}</div>
                 <span className="flex-1 text-sm font-semibold">BATCH {item.batch}</span>
-                <span className="font-bold text-emerald-400">{item.value}</span>
+                <span className="font-bold text-orange-400">{item.value}</span>
               </div>
             ))}
           </div>
@@ -614,7 +664,7 @@ export function Dashboard() {
           className="mb-8"
         >
           <div className="mb-4 text-center">
-            <h3 className="inline-block bg-gradient-to-r from-emerald-300 to-emerald-400 bg-clip-text text-2xl font-extrabold text-transparent">
+            <h3 className="inline-block bg-gradient-to-r from-orange-300 to-orange-400 bg-clip-text text-2xl font-extrabold text-transparent">
               🎯 MISSION SUCCESS RANK
             </h3>
             <p className="mt-1 text-sm text-gray-400">Batch Mission Statistics</p>
@@ -626,11 +676,11 @@ export function Dashboard() {
                 key={idx}
                 className={`flex items-center gap-3 rounded-[40px] border px-4 py-3 backdrop-blur-sm ${
                   item.highlighted
-                    ? "border-2 border-emerald-300 bg-gradient-to-r from-emerald-500/25 to-emerald-600/15 shadow-[0_0_20px_rgba(0,212,160,0.3)]"
-                    : "border-emerald-500/40 bg-gradient-to-r from-[#0d2f26]/80 to-[#0a1a15]/80"
+                    ? "border-2 border-orange-300 bg-gradient-to-r from-orange-500/25 to-orange-600/15 shadow-[0_0_20px_rgba(255,170,0,0.3)]"
+                    : "border-orange-500/40 bg-gradient-to-r from-[#322314]/80 to-[#1e140a]/80"
                 }`}
               >
-                <span className="w-9 text-lg font-extrabold text-emerald-300">
+                <span className="w-9 text-lg font-extrabold text-orange-300">
                   #{item.rank}
                 </span>
                 <div className="w-11 animate-pulse">{getMissionBadge(item.rank)}</div>
@@ -644,13 +694,13 @@ export function Dashboard() {
                     <span className="text-gray-400">
                       <Check className="h-3 w-3" />
                     </span>
-                    <span className="font-bold text-emerald-300">{item.successMissions}</span>
+                    <span className="font-bold text-orange-300">{item.successMissions}</span>
                   </div>
                   <div className="flex flex-col items-center">
                     <span className="text-gray-400">
                       <X className="h-3 w-3" />
                     </span>
-                    <span className="font-bold text-emerald-600">{item.failedMissions}</span>
+                    <span className="font-bold text-orange-600">{item.failedMissions}</span>
                   </div>
                 </div>
               </div>
@@ -658,7 +708,7 @@ export function Dashboard() {
           </div>
         </motion.section>
 
-        {/* Batch Buttons */}
+        {/* Batch Buttons - 301 removed */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -671,8 +721,8 @@ export function Dashboard() {
               onClick={() => handleBatchClick(batch)}
               className={`flex items-center gap-2 rounded-[50px] border-2 px-8 py-3.5 text-lg font-bold transition-all ${
                 batch === "305"
-                  ? "border-emerald-300 bg-gradient-to-r from-emerald-400 to-emerald-600 text-white shadow-[0_0_30px_rgba(0,212,160,0.5)] hover:scale-105"
-                  : "border-emerald-500/70 bg-[#0d2f26]/80 text-white backdrop-blur-sm hover:bg-emerald-500/30"
+                  ? "border-orange-300 bg-gradient-to-r from-orange-400 to-orange-600 text-white shadow-[0_0_30px_rgba(255,102,0,0.5)] hover:scale-105"
+                  : "border-orange-500/70 bg-[#281e14]/80 text-white backdrop-blur-sm hover:bg-orange-500/30"
               }`}
             >
               <Users className="h-5 w-5" />
@@ -689,9 +739,9 @@ export function Dashboard() {
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
-              className="mb-6 max-h-[380px] overflow-y-auto rounded-3xl border border-emerald-500/50 bg-[#0a1a15]/70 p-5 backdrop-blur-lg"
+              className="mb-6 max-h-[380px] overflow-y-auto rounded-3xl border border-orange-500/50 bg-[#140f0a]/70 p-5 backdrop-blur-lg"
             >
-              <h3 className="mb-4 text-lg font-bold text-emerald-400">
+              <h3 className="mb-4 text-lg font-bold text-orange-400">
                 📚 BATCH {selectedBatch} · {BATCH_STUDENTS[selectedBatch]?.length} STUDENTS
               </h3>
               <div className="grid grid-cols-2 gap-3">
@@ -699,7 +749,7 @@ export function Dashboard() {
                   <div
                     key={idx}
                     onClick={() => handleStudentClick(selectedBatch, name)}
-                    className="cursor-pointer rounded-2xl border border-emerald-500/30 bg-[#0d2f26]/80 p-3 text-center text-sm font-medium text-emerald-400 transition-all hover:border-emerald-400 hover:bg-emerald-500/20"
+                    className="cursor-pointer rounded-2xl border border-orange-500/30 bg-[#322814]/80 p-3 text-center text-sm font-medium text-orange-400 transition-all hover:border-orange-400 hover:bg-orange-500/20"
                   >
                     {name}
                   </div>
@@ -716,9 +766,9 @@ export function Dashboard() {
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="mb-6 rounded-[32px] border border-emerald-400/50 bg-emerald-500/10 p-5 backdrop-blur-sm"
+              className="mb-6 rounded-[32px] border border-orange-400/50 bg-orange-500/10 p-5 backdrop-blur-sm"
             >
-              <h3 className="mb-5 flex items-center justify-center gap-3 text-2xl font-extrabold tracking-wide text-emerald-300 drop-shadow-[0_0_8px_#00d4a0]">
+              <h3 className="mb-5 flex items-center justify-center gap-3 text-2xl font-extrabold tracking-wide text-orange-300 drop-shadow-[0_0_8px_#ff6600]">
                 <Crown className="h-6 w-6" />
                 BATCH 305 LEADERBOARD
                 <Crown className="h-6 w-6" />
@@ -729,24 +779,24 @@ export function Dashboard() {
                   <div
                     key={idx}
                     onClick={() => handleStudentClick("305", student.name)}
-                    className="flex cursor-pointer items-center gap-4 rounded-[60px] border border-emerald-500/50 bg-[#0a1a15]/80 px-5 py-4 backdrop-blur-sm transition-all hover:translate-x-1 hover:border-emerald-300 hover:bg-emerald-500/20"
+                    className="flex cursor-pointer items-center gap-4 rounded-[60px] border border-orange-500/50 bg-[#191412]/80 px-5 py-4 backdrop-blur-sm transition-all hover:translate-x-1 hover:border-orange-300 hover:bg-orange-500/20"
                   >
-                    <div className="w-14 bg-gradient-to-r from-emerald-300 to-emerald-400 bg-clip-text text-2xl font-extrabold text-transparent">
+                    <div className="w-14 bg-gradient-to-r from-orange-300 to-orange-400 bg-clip-text text-2xl font-extrabold text-transparent">
                       #{idx + 1}
                     </div>
-                    <div className="flex flex-1 items-center gap-2 text-lg font-bold capitalize text-emerald-100">
+                    <div className="flex flex-1 items-center gap-2 text-lg font-bold capitalize text-orange-100">
                       {idx === 0 ? (
-                        <Crown className="h-5 w-5 text-emerald-300" />
+                        <Crown className="h-5 w-5 text-orange-300" />
                       ) : idx === 1 ? (
-                        <Medal className="h-5 w-5 text-emerald-300" />
+                        <Medal className="h-5 w-5 text-orange-300" />
                       ) : idx === 2 ? (
-                        <Award className="h-5 w-5 text-emerald-300" />
+                        <Award className="h-5 w-5 text-orange-300" />
                       ) : (
-                        <Star className="h-5 w-5 text-emerald-300" />
+                        <Star className="h-5 w-5 text-orange-300" />
                       )}
                       {student.name}
                     </div>
-                    <div className="rounded-[40px] bg-black/30 px-3 py-1 text-lg font-extrabold text-transparent bg-gradient-to-r from-emerald-200 to-emerald-300 bg-clip-text">
+                    <div className="rounded-[40px] bg-black/30 px-3 py-1 text-lg font-extrabold text-transparent bg-gradient-to-r from-orange-200 to-orange-300 bg-clip-text">
                       {student.data.totalPoints || 0} pts
                     </div>
                   </div>
@@ -763,7 +813,7 @@ export function Dashboard() {
           transition={{ delay: 0.5 }}
           className="mb-8"
         >
-          <h2 className="mb-5 bg-gradient-to-r from-emerald-400 to-emerald-300 bg-clip-text text-center text-2xl font-extrabold text-transparent">
+          <h2 className="mb-5 bg-gradient-to-r from-orange-400 to-orange-300 bg-clip-text text-center text-2xl font-extrabold text-transparent">
             🏆 TOP 10 LEADERBOARD
           </h2>
 
@@ -771,9 +821,9 @@ export function Dashboard() {
             {displayRanking.map((item, idx) => (
               <div
                 key={idx}
-                className="flex items-center gap-3 rounded-[40px] border border-emerald-500/30 bg-gradient-to-r from-[#0d2f26]/80 to-[#0a1a15]/80 px-4 py-3 backdrop-blur-sm"
+                className="flex items-center gap-3 rounded-[40px] border border-orange-500/30 bg-gradient-to-r from-[#281e14]/80 to-[#140f0a]/80 px-4 py-3 backdrop-blur-sm"
               >
-                <span className="w-9 text-lg font-extrabold text-emerald-400">
+                <span className="w-9 text-lg font-extrabold text-orange-400">
                   #{idx + 1}
                 </span>
                 <div className="w-11">
@@ -783,14 +833,14 @@ export function Dashboard() {
                     ) : idx === 1 ? (
                       <Medal className="h-5 w-5 text-gray-300" />
                     ) : (
-                      <Award className="h-5 w-5 text-emerald-600" />
+                      <Award className="h-5 w-5 text-orange-600" />
                     )
                   ) : (
-                    <Star className="h-5 w-5 text-emerald-400" />
+                    <Star className="h-5 w-5 text-orange-400" />
                   )}
                 </div>
                 <span className="flex-1 text-sm font-semibold">{item.name}</span>
-                <span className="font-bold text-emerald-400">{item.points}</span>
+                <span className="font-bold text-orange-400">{item.points}</span>
               </div>
             ))}
           </div>
@@ -802,12 +852,12 @@ export function Dashboard() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6 }}
-            className="mb-8 rounded-[28px] border border-emerald-500/50 bg-gradient-to-br from-[#0d2f26]/70 to-[#0a1a15]/80 p-5 backdrop-blur-lg"
+            className="mb-8 rounded-[28px] border border-orange-500/50 bg-gradient-to-br from-[#281e14]/70 to-[#140f0a]/80 p-5 backdrop-blur-lg"
           >
-            <h2 className="mb-3 text-center text-xl font-bold text-emerald-400">
+            <h2 className="mb-3 text-center text-xl font-bold text-orange-400">
               🔥 LIVE UPDATE 🔥
             </h2>
-            <div className="rounded-[18px] border-l-4 border-emerald-500 bg-black/30 p-4 text-lg leading-relaxed">
+            <div className="rounded-[18px] border-l-4 border-orange-500 bg-black/30 p-4 text-lg leading-relaxed">
               {notice}
             </div>
           </motion.section>
@@ -821,16 +871,16 @@ export function Dashboard() {
         transition={{ delay: 0.7 }}
         className="mx-5 mb-8"
       >
-        <div className="rounded-[28px] border border-emerald-500/50 bg-gradient-to-br from-[#0d2f26]/90 to-[#0a1a15]/95 p-5 backdrop-blur-lg">
+        <div className="rounded-[28px] border border-orange-500/50 bg-gradient-to-br from-[#1f170f]/90 to-[#0a0805]/95 p-5 backdrop-blur-lg">
           <div className="mb-4 flex items-center justify-center gap-3">
-            <Calendar className="h-5 w-5 text-emerald-400" />
-            <h3 className="bg-gradient-to-r from-emerald-400 to-emerald-300 bg-clip-text text-xl font-bold text-transparent">
+            <Calendar className="h-5 w-5 text-orange-400" />
+            <h3 className="bg-gradient-to-r from-orange-400 to-orange-300 bg-clip-text text-xl font-bold text-transparent">
               TODAY UPDATE
             </h3>
-            <Bell className="h-5 w-5 text-emerald-400" />
+            <Bell className="h-5 w-5 text-orange-400" />
           </div>
           
-          <div className="rounded-[18px] border-l-4 border-emerald-500 bg-black/30 p-4">
+          <div className="rounded-[18px] border-l-4 border-orange-500 bg-black/30 p-4">
             <p className="text-sm leading-relaxed text-gray-300">
               {todayUpdate}
             </p>
@@ -842,22 +892,24 @@ export function Dashboard() {
       </motion.section>
 
       {/* Footer */}
-      <footer className="mt-auto border-t-2 border-emerald-500/50 bg-gradient-to-b from-[#0a1a15]/95 to-[#050d0a] px-5 py-10 backdrop-blur-xl">
+      <footer className="mt-auto border-t-2 border-orange-500/50 bg-gradient-to-b from-[#140f0a]/95 to-[#0a0805] px-5 py-10 backdrop-blur-xl">
         <div className="mx-auto max-w-4xl">
+          {/* Logo and tagline */}
           <div className="mb-6 flex flex-col items-center">
             <img
               src="https://i.postimg.cc/kX3Xh6PG/IMG-20260211-135705-716-removebg-preview.png"
               alt="Cloud of Core"
-              className="mb-3 h-16 drop-shadow-[0_0_20px_rgba(0,212,160,0.5)]"
+              className="mb-3 h-16 drop-shadow-[0_0_20px_rgba(255,102,0,0.5)]"
             />
             <p className="text-center text-sm text-gray-400">
               Empowering Students Worldwide
             </p>
           </div>
 
+          {/* Stats */}
           <div className="mb-6 flex flex-wrap items-center justify-center gap-6">
             <div className="flex items-center gap-2 text-sm">
-              <Globe className="h-4 w-4 text-emerald-500" />
+              <Globe className="h-4 w-4 text-orange-500" />
               <span className="text-gray-400">International Edition</span>
             </div>
             <div className="flex items-center gap-2 text-sm">
@@ -874,8 +926,10 @@ export function Dashboard() {
             </div>
           </div>
 
-          <div className="mb-6 h-px bg-gradient-to-r from-transparent via-emerald-500/50 to-transparent" />
+          {/* Divider */}
+          <div className="mb-6 h-px bg-gradient-to-r from-transparent via-orange-500/50 to-transparent" />
 
+          {/* Bottom row */}
           <div className="flex flex-col items-center gap-3 text-center">
             <p className="text-sm text-gray-500">
               Made with <Heart className="inline h-4 w-4 text-red-500" /> for students in Bangladesh
