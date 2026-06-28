@@ -400,7 +400,7 @@ export function Dashboard() {
   if (!user) return null;
 
   return (
-    <div className="relative z-10 flex min-h-screen flex-col bg-gradient-to-b from-[#0a1a15] to-[#050d0a]">
+    <div className="relative z-10 flex min-h-screen flex-col">
       {/* Header */}
       <header className="sticky top-0 z-50 flex items-center gap-3 border-b-2 border-emerald-500/50 bg-[#0a1a15]/85 px-5 py-3 backdrop-blur-xl">
         <img
