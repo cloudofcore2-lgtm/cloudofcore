@@ -38,7 +38,6 @@
   --sidebar-ring: oklch(0.439 0 0);
 }
 
-/* Dark theme is default now */
 .dark {
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
@@ -146,116 +145,19 @@
 /* DEEP GREEN GRADIENT LIQUID WATER EFFECTS     */
 /* ============================================ */
 
-/* Main Liquid Water Background Animation */
 @keyframes liquidWater {
-  0% {
-    background-position: 0% 50%;
-  }
-  25% {
-    background-position: 25% 75%;
-  }
-  50% {
-    background-position: 50% 50%;
-  }
-  75% {
-    background-position: 75% 25%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
+  0% { background-position: 0% 50%; }
+  25% { background-position: 25% 75%; }
+  50% { background-position: 50% 50%; }
+  75% { background-position: 75% 25%; }
+  100% { background-position: 0% 50%; }
 }
 
-@keyframes liquidWaterFloat {
-  0%, 100% {
-    transform: translateY(0px) scale(1);
-  }
-  33% {
-    transform: translateY(-5px) scale(1.02);
-  }
-  66% {
-    transform: translateY(5px) scale(0.98);
-  }
-}
-
-/* Deep Green Liquid Gradient */
-.liquid-green-gradient {
-  background: linear-gradient(
-    -45deg,
-    #0a1f1a,
-    #0d2f26,
-    #0a3d30,
-    #0d2f26,
-    #0a1f1a
-  );
-  background-size: 400% 400%;
-  animation: liquidWater 15s ease-in-out infinite;
-}
-
-/* Green Accent Glow */
-.green-glow {
-  box-shadow: 0 0 30px rgba(0, 200, 150, 0.3);
-  border-color: rgba(0, 200, 150, 0.3);
-}
-
-.green-glow-strong {
-  box-shadow: 0 0 50px rgba(0, 220, 170, 0.4);
-  border-color: rgba(0, 220, 170, 0.5);
-}
-
-/* Gradient Text - Green */
-.gradient-text-green {
-  background: linear-gradient(135deg, #00d4a0, #00a87a, #00d4a0);
-  background-size: 200% 200%;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  animation: liquidWater 4s ease-in-out infinite;
-}
-
-/* Liquid Border Effect */
-.liquid-border {
-  position: relative;
-  border: 1px solid transparent;
-  background-clip: padding-box;
-}
-
-.liquid-border::before {
-  content: '';
-  position: absolute;
-  inset: -2px;
-  border-radius: inherit;
-  padding: 2px;
-  background: linear-gradient(
-    45deg,
-    #00d4a0,
-    #00a87a,
-    #00d4a0,
-    #008060,
-    #00d4a0
-  );
-  background-size: 400% 400%;
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  animation: liquidWater 6s ease-in-out infinite;
-  pointer-events: none;
-}
-
-/* Pulse Animation - Green */
 @keyframes pulse-glow-green {
-  0%, 100% { 
-    box-shadow: 0 0 20px rgba(0, 200, 150, 0.3); 
-  }
-  50% { 
-    box-shadow: 0 0 60px rgba(0, 220, 170, 0.6); 
-  }
+  0%, 100% { box-shadow: 0 0 20px rgba(0, 200, 150, 0.3); }
+  50% { box-shadow: 0 0 60px rgba(0, 220, 170, 0.6); }
 }
 
-.animate-pulse-glow {
-  animation: pulse-glow-green 2s infinite;
-}
-
-/* Float Animation - Green */
 @keyframes float-green {
   0%, 100% { 
     transform: translateY(0px);
@@ -267,34 +169,70 @@
   }
 }
 
+@keyframes wave {
+  0% { transform: translateX(0) translateZ(0) scaleY(1); }
+  50% { transform: translateX(-25%) translateZ(0) scaleY(0.8); }
+  100% { transform: translateX(-50%) translateZ(0) scaleY(1); }
+}
+
+@keyframes ripple {
+  0% { transform: scale(0.8); opacity: 0.8; }
+  100% { transform: scale(2); opacity: 0; }
+}
+
+@keyframes spin-smooth {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scale-in {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.liquid-green-gradient {
+  background: linear-gradient(-45deg, #0a1f1a, #0d2f26, #0a3d30, #0d2f26, #0a1f1a);
+  background-size: 400% 400%;
+  animation: liquidWater 15s ease-in-out infinite;
+}
+
+.green-glow {
+  box-shadow: 0 0 30px rgba(0, 200, 150, 0.3);
+  border-color: rgba(0, 200, 150, 0.3);
+}
+
+.gradient-text-green {
+  background: linear-gradient(135deg, #00d4a0, #00a87a, #00d4a0);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: liquidWater 4s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow-green 2s infinite;
+}
+
 .animate-float {
   animation: float-green 3s ease-in-out infinite;
 }
 
-/* Water Ripple Effect */
-@keyframes ripple {
-  0% {
-    transform: scale(0.8);
-    opacity: 0.8;
-  }
-  100% {
-    transform: scale(2);
-    opacity: 0;
-  }
+.animate-spin-smooth {
+  animation: spin-smooth 1s linear infinite;
 }
 
-.ripple-effect {
-  position: relative;
-  overflow: hidden;
+.animate-fade-in-up {
+  animation: fade-in-up 0.5s ease-out forwards;
 }
 
-.ripple-effect::after {
-  content: '';
-  position: absolute;
-  inset: -50%;
-  background: radial-gradient(circle at center, rgba(0, 200, 150, 0.1) 0%, transparent 70%);
-  animation: ripple 4s ease-out infinite;
-  pointer-events: none;
+.animate-scale-in {
+  animation: scale-in 0.3s ease-out forwards;
 }
 
 /* Smooth scrolling */
@@ -302,32 +240,27 @@ html {
   scroll-behavior: smooth;
 }
 
-/* GPU acceleration for smooth animations */
 .gpu-accelerate {
   transform: translateZ(0);
   backface-visibility: hidden;
   will-change: transform;
 }
 
-/* Optimized transitions */
 * {
   -webkit-tap-highlight-color: transparent;
 }
 
-/* Smooth button interactions */
 button, a {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   user-select: none;
 }
 
-/* Optimized scrolling for mobile */
 .scroll-container {
   -webkit-overflow-scrolling: touch;
   overscroll-behavior: contain;
 }
 
-/* Reduce motion for accessibility */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
@@ -337,112 +270,4 @@ button, a {
   html {
     scroll-behavior: auto;
   }
-}
-
-/* Loading spinner animation - Green */
-@keyframes spin-smooth {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
-.animate-spin-smooth {
-  animation: spin-smooth 1s linear infinite;
-}
-
-/* Fade in animation */
-@keyframes fade-in-up {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.animate-fade-in-up {
-  animation: fade-in-up 0.5s ease-out forwards;
-}
-
-/* Scale in animation */
-@keyframes scale-in {
-  from {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-.animate-scale-in {
-  animation: scale-in 0.3s ease-out forwards;
-}
-
-/* ============================================ */
-/* LIQUID WATER WAVE ANIMATION FOR BACKGROUND   */
-/* ============================================ */
-
-@keyframes wave {
-  0% {
-    transform: translateX(0) translateZ(0) scaleY(1);
-  }
-  50% {
-    transform: translateX(-25%) translateZ(0) scaleY(0.8);
-  }
-  100% {
-    transform: translateX(-50%) translateZ(0) scaleY(1);
-  }
-}
-
-.wave-container {
-  position: relative;
-  overflow: hidden;
-}
-
-.wave-container::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: 
-    repeating-linear-gradient(
-      90deg,
-      transparent,
-      transparent 50px,
-      rgba(0, 200, 150, 0.03) 50px,
-      rgba(0, 200, 150, 0.03) 100px
-    );
-  background-size: 200px 100%;
-  animation: wave 8s linear infinite;
-  pointer-events: none;
-}
-
-/* Green Water Drop Effect */
-@keyframes drop {
-  0% {
-    transform: scale(0);
-    opacity: 1;
-  }
-  50% {
-    transform: scale(1);
-    opacity: 0.5;
-  }
-  100% {
-    transform: scale(1.5);
-    opacity: 0;
-  }
-}
-
-.water-drop {
-  position: relative;
-}
-
-.water-drop::after {
-  content: '💧';
-  position: absolute;
-  font-size: 20px;
-  animation: drop 3s ease-in-out infinite;
-  pointer-events: none;
 }
