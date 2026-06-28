@@ -120,7 +120,7 @@ export function Dashboard() {
   const [user, setUser] = useState<User | null>(null);
   const [showWelcome, setShowWelcome] = useState(false);
   const [welcomeShown, setWelcomeShown] = useState(false);
-  const [totalStudents, setTotalStudents] = useState("📊 2026 · 1,852 Students");
+  const [totalStudents, setTotalStudents] = useState("📊 2026 · 1,783 Students");
   const [batchStats, setBatchStats] = useState<BatchStat[]>([]);
   const [leadership, setLeadership] = useState<LeadershipItem[]>([]);
   const [missionRank, setMissionRank] = useState<MissionItem[]>([]);
@@ -166,7 +166,7 @@ export function Dashboard() {
         const docRef = doc(db, "settings", "general");
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
-          setTotalStudents(docSnap.data().totalStudents || "2026 - 1,852 Students");
+          setTotalStudents(docSnap.data().totalStudents || "📊 2026 · 1,783 Students");
         }
       } catch {
         // Use default value on permission error
@@ -174,7 +174,7 @@ export function Dashboard() {
     };
     fetchSettings();
 
-    // Batch stats with error handling
+    // Batch stats with 301 filter - FIXED
     try {
       const unsubBatchStats = onSnapshot(
         collection(db, "batchStats"),
@@ -182,11 +182,14 @@ export function Dashboard() {
           const stats: BatchStat[] = [];
           snapshot.forEach((docItem) => {
             const data = docItem.data();
-            stats.push({
-              batch: data.batch,
-              value: data.value,
-              trend: data.trend,
-            });
+            // 301 বাদ দিতে এই কন্ডিশন
+            if (data.batch !== "301") {
+              stats.push({
+                batch: data.batch,
+                value: data.value,
+                trend: data.trend,
+              });
+            }
           });
           if (stats.length > 0) {
             setBatchStats(stats.sort((a, b) => parseInt(a.batch) - parseInt(b.batch)));
@@ -525,12 +528,12 @@ export function Dashboard() {
           {totalStudents}
         </motion.div>
 
-        {/* Batch Stats */}
+        {/* Batch Stats - 301 removed */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="mb-6 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4"
+          className="mb-6 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-5"
         >
           {displayBatchStats.map((stat, idx) => (
             <div
