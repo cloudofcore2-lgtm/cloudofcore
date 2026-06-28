@@ -712,7 +712,7 @@ export function Dashboard() {
           transition={{ delay: 0.4 }}
           className="mb-6 flex flex-wrap justify-center gap-3"
         >
-          {["301", "302", "303", "304", "305"].map((batch) => (
+          {["302", "303", "304", "305", "306"].map((batch) => (
             <button
               key={batch}
               onClick={() => handleBatchClick(batch)}
