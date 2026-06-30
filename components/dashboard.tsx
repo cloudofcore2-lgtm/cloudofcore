@@ -855,7 +855,7 @@ export function Dashboard() {
             className="mb-8 rounded-[28px] border border-orange-500/50 bg-gradient-to-br from-[#281e14]/70 to-[#140f0a]/80 p-5 backdrop-blur-lg"
           >
             <h2 className="mb-3 text-center text-xl font-bold text-orange-400">
-              🔥 LIVE UPDATE 🔥
+              🔥 305 BATCH UPDATE 🔥
             </h2>
             <div className="rounded-[18px] border-l-4 border-orange-500 bg-black/30 p-4 text-lg leading-relaxed">
               {notice}
@@ -875,7 +875,7 @@ export function Dashboard() {
           <div className="mb-4 flex items-center justify-center gap-3">
             <Calendar className="h-5 w-5 text-orange-400" />
             <h3 className="bg-gradient-to-r from-orange-400 to-orange-300 bg-clip-text text-xl font-bold text-transparent">
-              TODAY UPDATE
+              OFFICIAL UPDATE
             </h3>
             <Bell className="h-5 w-5 text-orange-400" />
           </div>
