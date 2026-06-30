@@ -855,7 +855,7 @@ export function Dashboard() {
             className="mb-8 rounded-[28px] border border-orange-500/50 bg-gradient-to-br from-[#281e14]/70 to-[#140f0a]/80 p-5 backdrop-blur-lg"
           >
             <h2 className="mb-3 text-center text-xl font-bold text-orange-400">
-              🔥 305 BATCH UPDATE 🔥
+              🔥 305 BATCH NOTICE 🔥
             </h2>
             <div className="rounded-[18px] border-l-4 border-orange-500 bg-black/30 p-4 text-lg leading-relaxed">
               {notice}
