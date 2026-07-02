@@ -38,9 +38,7 @@ export function BatchAccessGate({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <>
-      {children}
-      <div className="fixed inset-0 flex items-center justify-center bg-black/20 backdrop-blur-sm">
+    <div className="fixed inset-0 flex items-center justify-center bg-black/40 backdrop-blur-md z-50">
         <div className="relative w-full max-w-md mx-4 p-8 rounded-2xl backdrop-blur-xl bg-white/10 border border-white/20 shadow-2xl">
           {/* Animated gradient background */}
           <div className="absolute inset-0 rounded-2xl overflow-hidden">
@@ -48,6 +46,11 @@ export function BatchAccessGate({ children }: { children: React.ReactNode }) {
           </div>
 
           <div className="relative z-10">
+            <div className="text-center mb-2">
+              <p className="text-sm font-semibold text-blue-300 mb-4 tracking-wider">
+                SECURED BY IFC ARENA
+              </p>
+            </div>
             <div className="text-center mb-8">
               <h2 className="text-3xl font-bold text-white mb-4">Batch 305</h2>
               <p className="text-lg text-white/90 leading-relaxed">
@@ -104,9 +107,8 @@ export function BatchAccessGate({ children }: { children: React.ReactNode }) {
                 </button>
               </div>
             )}
-          </div>
         </div>
       </div>
-    </>
+    </div>
   )
 }
